@@ -1,38 +1,27 @@
 import i18n from "i18next";
+import Configs from './configs';
 import { initReactI18next } from "react-i18next";
-import Backend from 'i18next-xhr-backend';
-import Config from "./config";
+import en from './configs/translation/en';
+import zh from './configs/translation/zh';
 
-const language = Config.Language || navigator.language.split(/[-_]/)[0];  // language without region code
-const FALLBACKLNG = "en";
+// the translations
+// (tip move them in a JSON file and import them)
+const resources = {
+  en: en,
+  zh: zh
+};
 
 i18n
-  .use(Backend)
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
-    react: {
-      //   useSuspense: false,
-      wait: true
-    },
-    // resources,
-    lng: language,
-    // whitelist: [],
-    fallbackLng: FALLBACKLNG,
-    // ns: ['translation'],
-    backend: {
-      /* translation file path */
-      loadPath: 'locales/{{lng}}/{{ns}}.json'
-    },
-    // keySeparator: false, // we do not use keys in form messages.welcome
+    resources: resources,
+    lng: Configs.Language,
+    fallBacking: 'en',
+    keySeparator: false, // we do not use keys in form messages.welcome
+
     interpolation: {
       escapeValue: false // react already safes from xss
     }
-  }, (e, t) => {
-    if (e) {
-      console.log("loading language fail:", e);
-      i18n.language = FALLBACKLNG;
-    }
   });
 
-
-export default i18n;
+  export default i18n;

@@ -1,53 +1,67 @@
-import React from "react";
-import Router from './router/router';
-import { ConfigProvider } from "antd";
-import { Provider } from "mobx-react";
-import stores from "./store/stores";
-import Config from "./config";
-import neoNode from "./neonode";
-import neoWebSocket from "./components/WebSocket/neoWebSocket";
+import React from 'react';
+import _ from 'lodash';
+import { useObserver } from 'mobx-react'
+// import { storesContext } from './store';
+import { Switch, Route, useLocation } from 'react-router-dom';
+import routes from './router';
+import Header from './components/Header';
+import Sider from './components/Sider';
+import Footer from './components/Footer';
+import HomeLayout from './layouts/home';
+import { Layout } from 'antd';
+import './App.less';
 
+const { Content } = Layout;
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
+const App = () => {
+  // const store = React.useContext(storesContext);
+  const location = useLocation();
 
-    console.log(window.location.href);
-    if (process.env.NODE_ENV !== "development") {
-      neoNode.switchNode();
-    }
-
-    neoWebSocket.initWebSocket();
-    neoWebSocket.registMethod("getSyncHeight", this.processGetSyncHeight);
-    neoWebSocket.registMethod("getWalletBalance", this.processGetWalletBalance);
-  }
-
-
-  componentWillUnmount = () => {
-    neoWebSocket.unregistMethod("getSyncHeight", this.processGetSyncHeight);
-    neoWebSocket.unregistMethod("getWalletBalance", this.processGetWalletBalance);
-  }
-
-  processGetSyncHeight(msg) {
-    stores.blockSyncStore.setHeight(msg.result);
-  }
-
-
-  processGetWalletBalance(msg) {
-    stores.walletStore.setAccounts(msg.result.accounts);
-    stores.walletStore.setUnclaimedGas(msg.result.unclaimedGas);
-  }
-
-  render() {
-    return (
-      <Provider {...stores}>
-        <ConfigProvider>
-          <Router></Router>
-        </ConfigProvider>
-      </Provider>
-    );
-  }
+  return useObserver(() => _.get(location, 'pathname') === '/' ? (
+    <div id="App">
+      <Layout className="layout-container">
+        <Header />
+        <Content>
+          <HomeLayout />
+          <Switch>
+            {routes.map((route, index) => (
+              <Route
+                key={index}
+                path={route.path}
+                exact={route.exact}
+              >
+                { route.layout }
+              </Route>
+            ))}
+          </Switch>
+        </Content>
+        <Footer />
+      </Layout>
+    </div>
+  ) : (
+    <div id="App">
+      <Layout className="layout-container" hasSider>
+        <Sider />
+        <Layout className="layout-container">
+          <Header />
+          <Content>
+            <Switch>
+              {routes.map((route, index) => (
+                <Route
+                  key={index}
+                  path={route.path}
+                  exact={route.exact}
+                >
+                  { route.layout }
+                </Route>
+              ))}
+            </Switch>
+          </Content>
+          <Footer />
+        </Layout>
+      </Layout>
+    </div>
+  ));
 }
-
 
 export default App;

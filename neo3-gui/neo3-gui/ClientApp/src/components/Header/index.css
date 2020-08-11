@@ -1,0 +1,14 @@
+#Header {
+  background-color: transparent;
+}
+
+.header-container {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.backBT {
+  border: none !important;
+}
