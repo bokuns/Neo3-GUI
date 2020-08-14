@@ -1,4 +1,5 @@
 import Config from '../configs';
+import neoNode from '../neoNode';
 
 const globalStore = {
   mainnet: Config.RPCURL,
@@ -9,19 +10,12 @@ const globalStore = {
     this.onHomePage = value;
   },
 
-  showErrorModal: false,
-  setShowErrorModal: function(value) {
-    this.showErrorModal = value;
-  },
-
-  errorModal: {
-    title: '',
-    content: ''
-  },
-  setErrorModal: function(data) {
-    this.errorModal = {
-      ...data
-    }
+  network: Config.Network,
+  setNetwork: function(value) {
+    Config.changeNetwork(value);
+    console.log('switchNode:', value);
+    neoNode.switchNode(value);
+    this.network = value;
   }
 };
 

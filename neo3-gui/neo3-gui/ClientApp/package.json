@@ -30,7 +30,7 @@
     "test": "craco test",
     "eject": "react-scripts eject",
     "build-electron": "electro-builder",
-    "start-electron": "cross-env NODE_ENV=development electron .",
+    "start-electron": "cross-env NODE_ENV=development nodemon --ignore 'gui-config.json' --exec 'electron .'",
     "start-electron-prod": "electron .",
     "publish": "npm run build && npm run build-electron",
     "dev": "npm run start | npm run start-electron",
@@ -142,9 +142,11 @@
     "electron": "^9.2.0",
     "electron-builder": "^22.8.0",
     "electron-devtools-installer": "^3.1.1",
+    "electron-reload": "^1.5.0",
     "eslint": "^6.6.0",
     "eslint-plugin-react": "^7.20.5",
-    "husky": "^4.2.5"
+    "husky": "^4.2.5",
+    "nodemon": "^2.0.4"
   },
   "husky": {
     "hooks": {

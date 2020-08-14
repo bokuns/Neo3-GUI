@@ -6,7 +6,7 @@ process.once('loaded', function () {
   global.Buffer = Buffer
 })
 
-global.electron = require('electron');
-window.ipcRenderer = require('electron').ipcRenderer;
-window.remote = require('electron').remote;
+// global.electron = require('electron');
+// window.ipcRenderer = require('electron').ipcRenderer;
+// window.remote = require('electron').remote;
 // window.nodeManager = new NodeManager();

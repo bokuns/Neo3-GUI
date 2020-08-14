@@ -9,103 +9,105 @@ import {
   FileSyncOutlined,
   DisconnectOutlined
 } from '@ant-design/icons';
+import SettingEntry from '../Setting';
 import { Layout, Menu } from 'antd';
 const { SubMenu } = Menu;
 const { Sider } = Layout;
 
 const MySider = () => {
-  const { t } = useTranslation(['sideBar', 'home', 'advanced']);
+  const { t } = useTranslation();
   const location = useLocation();
   const history = useHistory();
   // const [ collapsed, setCollapsed ] = React.useState(false);
 
   const menuItemsList = [
     {
-      title: t('sideBar:home'),
+      title: t('sideBar.home'),
       key: '0',
       icon: <HomeOutlined />
     },
     {
-      title: t('sideBar:blockchain'),
+      title: t('sideBar.blockchain'),
       key: '1',
       icon: <PartitionOutlined />,
       subMenus: [
         {
-          title: t('sideBar:blocks'),
+          title: t('sideBar.blocks'),
           key: '1_0'
         },
         {
-          title: t('sideBar:transactions'),
+          title: t('sideBar.transactions'),
           key: '1_1'
         },
         {
-          title: t('sideBar:assets'),
+          title: t('sideBar.assets'),
           key: '1_2'
         }
       ]
     },
     {
-      title: t('sideBar:wallet'),
+      title: t('sideBar.wallet'),
       key: '2',
       icon: <WalletOutlined />,
       subMenus: [
         {
-          title: t('sideBar:accounts'),
+          title: t('sideBar.accounts'),
           key: '2_0'
         },
         {
-          title: t('sideBar:transaction Records'),
+          title: t('sideBar.transaction Records'),
           key: '2_1'
         },
         {
-          title: t('sideBar:transfer'),
+          title: t('sideBar.transfer'),
           key: '2_2'
         }
       ]
     },
     {
-      title: t('sideBar:contract'),
+      title: t('sideBar.contract'),
       key: '3',
       icon: <FileSyncOutlined />,
       subMenus: [
         {
-          title: t('sideBar:search contract'),
+          title: t('sideBar.search contract'),
           key: '3_0'
         },
         {
-          title: t('sideBar:deploy contract'),
+          title: t('sideBar.deploy contract'),
           key: '3_1'
         },
         {
-          title: t('sideBar:invoke contract'),
+          title: t('sideBar.invoke contract'),
           key: '3_2'
         }
       ],
     },
     {
-      title: t('home:advanced'),
+      title: t('home.advanced'),
       key: '4',
       icon: <DisconnectOutlined />,
       subMenus: [
         {
-          title: t('advanced:tools'),
+          title: t('advanced.tools'),
           key: '4_0'
         },
         {
-          title: t('advanced:candidate'),
+          title: t('advanced.candidate'),
           key: '4_1'
         },
         {
-          title: t('advanced:vote'),
+          title: t('advanced.vote'),
           key: '4_2'
         },
         {
-          title: t('advanced:signature'),
+          title: t('advanced.signature'),
           key: '4_3'
         }
       ]
     }
   ];
+
   const generateItemList = () => {
     if (location.pathname.includes('/chain')) {
       return menuItemsList[1];
@@ -120,12 +122,14 @@ const MySider = () => {
   }
 
   const generateMenuItem = (menuItem) => {
-    if (!menuItem) return;
+    if (!menuItem) return (<div />);
     const { title, key, icon, subMenus } = menuItem;
 
     return (
       <SubMenu key={key} icon={icon} title={title}>
-        { subMenus.map(item => (<Menu.Item key={item.key}>{ item.title }</Menu.Item>)) }
+        { subMenus.map(item =>
+          (<Menu.Item key={item.key}>{ item.title }</Menu.Item>))
+        }
       </SubMenu>
     );
   };
@@ -142,8 +146,10 @@ const MySider = () => {
     return (
       <Menu
         mode="inline"
+        className="menu-scroll"
+        theme="light"
         defaultSelectedKeys={[listMenu.subMenus[0].key]}
-        defaultOpenKeys={[listMenu.key]}
+        openKeys={[listMenu.key]}
         style={{ height: '100%' }}
       >
         <Menu.Item key={homeItem.key} icon={homeItem.icon} onClick={() => handleHomeClick()}>
@@ -154,15 +160,21 @@ const MySider = () => {
     );
   };
 
-
   return (
-    <Sider
-      breakpoint="md"
-      collapsedWidth="0"
-      className="themeColor"
-    >
-      { generateMenu() }
-    </Sider>
+    <div id="Sider" style={{ height: '100%' }}>
+      <Sider
+        breakpoint="md"
+        collapsedWidth="0"
+        style={{ height: '100%' }}
+        className="sider-wrapper"
+      >
+        <div>
+          <div className="menu-logo" />
+          { generateMenu() }
+        </div>
+        <SettingEntry />
+      </Sider>
+    </div>
   );
 };
 

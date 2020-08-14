@@ -10,15 +10,16 @@ import { Typography } from 'antd';
 const { Text } = Typography;
 
 const Sync = () => {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation();
   const store = React.useContext(storesContext);
   return useObserver(() => (
     <div id="Sync" className="ml3 mb0">
       {
-        (_.get(store, 'blockSync.headerHeight', -1) < 0) ? <Text className="t-normal bold"> - / - {t("common:connecting")}</Text> :
-        <Text className="t-normal bold">
-          {_.get(store, 'blockSync.syncHeight')} / {_.get(store, 'blockSync.headerHeight')} {t("common:syncing")}
-        </Text>
+        (_.get(store, 'blockSync.headerHeight', -1) < 0) ?
+          <Text className="t-normal bold"> - / - {t("common.connecting")}</Text> :
+          <Text className="t-normal bold">
+            {_.get(store, 'blockSync.syncHeight')} / {_.get(store, 'blockSync.headerHeight')} {t("common.syncing")}
+          </Text>
       }
       <SyncOutlined className="ml3" type="sync" spin />
     </div>

@@ -6,22 +6,30 @@ import zh from './configs/translation/zh';
 
 // the translations
 // (tip move them in a JSON file and import them)
+const fallBackLng = 'en';
 const resources = {
-  en: en,
-  zh: zh
+  en: {
+    translation: en
+  },
+  zh: {
+    translation: zh
+  }
 };
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
+    ns: ['translation'],
+    defaultNS: 'translation',
     resources: resources,
     lng: Configs.Language,
-    fallBacking: 'en',
-    keySeparator: false, // we do not use keys in form messages.welcome
-
+    fallBacking: fallBackLng,
     interpolation: {
-      escapeValue: false // react already safes from xss
+      escapeValue: false,  // react already safes from xss
+    },
+    react: {
+      wait: true
     }
   });
 
-  export default i18n;
+export default i18n;

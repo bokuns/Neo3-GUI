@@ -14,7 +14,7 @@ import adavancedimg from '../../assets/images/4.svg';
 import aniadavancedimg from '../../assets/images/4-ani.svg';
 
 const Home = () => {
-  const { t } = useTranslation(['home']);
+  const { t } = useTranslation();
 
   return (
     <div id="Home" className="home-content">
@@ -22,13 +22,13 @@ const Home = () => {
         <img src={img} className="app-logo" alt="img" />
       </div>
       <div className="home-icon">
-        <Row gutter={60}>
+        <Row gutter={36}>
         <Col span={6}>
           <Link to='/chain/blocks'>
             <div className="home-link">
               <img className="show-img" src={blockimg} alt="img" />
               <img className="hidden-img" src={aniblockimg} alt="img" />
-              <span>{t('home:blockchain')}</span>
+              <span>{t('home.blockchain')}</span>
             </div>
           </Link>
         </Col>
@@ -37,7 +37,7 @@ const Home = () => {
             <div className="home-link">
               <img className="show-img" src={walletimg} alt="img" />
               <img className="hidden-img" src={aniwalletimg} alt="img" />
-              <span>{t("home:wallet")}</span>
+              <span>{t("home.wallet")}</span>
             </div>
           </Link>
         </Col>
@@ -46,7 +46,7 @@ const Home = () => {
             <div className="home-link">
               <img className="show-img" src={contractimg} alt="img" />
               <img className="hidden-img" src={anicontractimg} alt="img" />
-              <span>{t("home:contract")}</span>
+              <span>{t("home.contract")}</span>
             </div>
           </Link>
         </Col>
@@ -55,7 +55,7 @@ const Home = () => {
             <div className="home-link">
               <img className="show-img" src={adavancedimg} alt="img" />
               <img className="hidden-img" src={aniadavancedimg} alt="img" />
-              <span>{t("home:advanced")}</span>
+              <span>{t("home.advanced")}</span>
             </div>
           </Link>
         </Col>

@@ -9,7 +9,7 @@ import advancedLayouts from '../layouts/advanced';
 const { Blocks } = chainLayouts;
 const { WalletList } = walletLayouts;
 const { Search } = contractLayouts;
-const { AdvancedMain } = advancedLayouts;
+const { Tools } = advancedLayouts;
 
 const routes = [
   {
@@ -39,7 +39,7 @@ const routes = [
     path: '/advanced/tools',
     exact: true,
     sider: <Sider />,
-    layout: <AdvancedMain />
+    layout: <Tools />
   }
 ];
 

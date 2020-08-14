@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter as Router } from 'react-router-dom';
 import './index.css';
-import App from './App';
+import './i18n';
 import * as serviceWorker from './serviceWorker';
 import { StoresProvider } from './store';
 import 'mobx-react/batchingForReactDom';
-import './i18n';
+import App from './App';
 
 ReactDOM.render(
   <React.StrictMode>

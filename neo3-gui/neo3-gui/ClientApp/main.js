@@ -4,9 +4,11 @@ const path = require('path');
 const url = require('url');
 const esmRequire = require("esm")(module);
 const constants = esmRequire('./src/configs/constants');
+// require('electron-reload');
 
-const { BASE_URL_DEV } = constants.default;
-const isLocked = app.requestSingleInstanceLock()
+app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
+const { GUI_URL } = constants.default;
+const isLocked = true // app.requestSingleInstanceLock()
 
 let mainWindow = null;
 
@@ -20,8 +22,7 @@ const createWindow = () => {
       javascript: true,
       plugins: true,
       nodeIntegration: false,
-      webSecurity: true,
-      enableRemoteModule: true,
+      webSecurity: false,
       preload: path.join(__dirname, 'preload.js')
     }
   });
@@ -29,7 +30,7 @@ const createWindow = () => {
   // and load the index.html of the app.
   if (process.env.NODE_ENV === 'development') {
     console.log('env:', process.env.NODE_ENV);
-    mainWindow.loadURL(BASE_URL_DEV);
+    mainWindow.loadURL(GUI_URL);
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
   } else {
@@ -55,7 +56,7 @@ const createWindow = () => {
   });
 
   mainWindow.webContents.on('new-window', (event) => {
-    event.preventDefault();
+    // event.preventDefault();
   });
 };
 
@@ -64,10 +65,12 @@ if (!isLocked) {
 } else {
   app.on('second-instance', () => {
     // Someone tried to run a second instance, we should focus our window.
+    /*
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore();
       mainWindow.focus();
     }
+    */
   });
 
   // This method will be called when Electron has finished

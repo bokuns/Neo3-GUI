@@ -290,7 +290,7 @@ const translation = {
 		'transactions': 'Transactions',
 		'transfer': 'Transfer',
 		'transfer send error': 'Send failed, please try again later',
-		'transfer send error 20014': 'Send failed，not enough signatures',
+		'transfer send error json': 'Send failed，not enough signatures',
 		'transfer send success': 'Send Success',
 		'transfer warning': 'Safety tip: Do not transfer money to strangers easily.Please confirm the receiving address, transfer amount and asset type carefully.Please carefully identify assets with the same name to avoid being cheated.Do not transfer money to the receiving account (address) of other blockchain.',
 		'transfer add': 'Add transfer',

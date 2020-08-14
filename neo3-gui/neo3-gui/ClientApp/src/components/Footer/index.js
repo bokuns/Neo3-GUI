@@ -6,9 +6,7 @@ const { Footer } = Layout;
 const MyFooter = () => {
   return (
     <div id="Footer">
-      <Footer>
-        This is Footer.
-      </Footer>
+      <Footer className="mt1">Copyright © Neo Team 2014-2020</Footer>
     </div>
   );
 };

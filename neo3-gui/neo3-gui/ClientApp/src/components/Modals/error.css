@@ -1,0 +1,16 @@
+.modal-pre {
+  overflow: 'hidden';
+  overflow-x: 'auto';
+  overflow-y: 'scroll';
+  max-height: '60vh';
+  width: 'auto';
+}
+
+.show-pri{
+  margin-top: 20px;
+  padding-right: 35px;
+}
+.show-pri p{
+  font-size: 12px;
+  word-break: break-all;
+}

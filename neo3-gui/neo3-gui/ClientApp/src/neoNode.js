@@ -1,10 +1,10 @@
 import { spawn } from 'child_process';
 import path from 'path';
 import { remote } from 'electron';
-import Config from "./config";
+import Config from './configs';
 
-const isMac = process.platform === "darwin";
-// const isWin = process.platform === "win32";
+const isMac = process.platform === 'darwin';
+// const isWin = process.platform === 'win32';
 const appPath = remote.app.getAppPath();
 
 class NeoNode {
@@ -27,11 +27,11 @@ class NeoNode {
   }
 
   start(env, errorCallback) {
-    this.node = this.runCommand("dotnet neo3-gui.dll", env, errorCallback);
+    this.node = this.runCommand('dotnet neo3-gui.dll', env, errorCallback);
   }
 
   startNode(network, port, errorCallback) {
-    const env = { NEO_NETWORK: network || "", NEO_GUI_PORT: port || '' };
+    const env = { NEO_NETWORK: network || '', NEO_GUI_PORT: port || '' };
     this.start(env, errorCallback);
   }
 
@@ -50,15 +50,16 @@ class NeoNode {
   delayStartNode(retryCount) {
     retryCount = retryCount || 0;
     if (retryCount > 10) {
-      console.log("stop retry");
+      console.log('stop retry');
       return;
     }
     if (this.node) {
       this.node.kill();
     }
+
     this.debounce(() => {
       this.startNode(Config.Network, Config.Port, () => {
-        console.log(new Date(), retryCount + ":switch network fail:" + Config.Network);
+        console.log(new Date(), retryCount + ':switch network fail:' + Config.Network);
         retryCount++;
         this.delayStartNode(retryCount);
       })
@@ -66,15 +67,19 @@ class NeoNode {
   }
 
   runCommand(command, env, errorCallback) {
-    const startPath = appPath.replace("app.asar", "");
-    console.log("startPath:", startPath);
+    const startPath = appPath.replace('app.asar', '');
     const parentEnv = process.env;
     const childEnv = { ...parentEnv, ...env };
     if (isMac) {
-      childEnv.PATH = childEnv.PATH + ":/usr/local/share/dotnet";
+      childEnv.PATH = childEnv.PATH + ':/usr/local/share/dotnet';
     }
-
-    const ps = spawn(command, [], { shell: true, encoding: 'utf8', cwd: path.join(startPath, 'build-neo-node'), env: childEnv });
+    console.log('startPath:', startPath, '\nchildEnv:', childEnv);
+    const ps = spawn(command, [], {
+      shell: true,
+      encoding: 'utf8',
+      cwd: path.join(startPath, 'build-neo-node'),
+      env: childEnv
+    });
     ps.firstError = true;
     // ps.stdout.setEncoding('utf8');
     /*
@@ -86,8 +91,7 @@ class NeoNode {
     ps.stderr.setEncoding('utf8');
     ps.stderr.on('data', (data) => {
       // var str = iconv.decode(Buffer.from(data, 'binary'), 'cp936')
-      // console.log("error str:", str);
-      console.error(ps.pid + ":" + data.toString());
+      // console.log('error str:', str);
       if (ps.firstError && errorCallback) {
         ps.firstError = false;
         errorCallback(data.toString());
