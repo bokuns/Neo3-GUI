@@ -100,13 +100,16 @@ const translation = {
 		'next': '下一步',
 		'ok': '确认',
 		'prev': '上一步',
+    'reload': '重新加载',
 		'search': '搜索',
 		'send': '发送',
-		'show details': '显示私钥',
+    'show details': '显示私钥',
+    'sync now': '立即同步',
 		'test deploy': '试运行',
 		'test invoke': '试运行'
 	},
 	'common': {
+    'back': '返回',
 		'bytes': '字节',
 		'connecting': '正在连接',
 		'contract': '合约',
@@ -115,7 +118,7 @@ const translation = {
 		'load more': '加载更多',
 		'size': '大小',
 		'syncing': '区块同步中',
-		'time': '时间'
+    'time': '时间'
 	},
 	'contract': {
 		'choose account': '选择地址',

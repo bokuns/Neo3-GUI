@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
-import { Modal, Button, message } from 'antd';
+import { Modal, Button } from 'antd';
+import showCopiedMsg from '../../components/Messages/showCopied';
 import './error.css';
 import constants from '../../configs/constants';
 import { Trans } from 'react-i18next';
@@ -9,15 +10,6 @@ import i18n from '../../i18n';
 const { JSON_ERROR_CODES, MODAL_WIDTH_LG, MODAL_WIDTH_MD } = constants;
 
 const showErrorModal = ({ error, title }) => {
-  const clickToCopy = (text) => {
-    if (!_.ge(navigator, 'clipboard.writeText')) {
-      message.error('Failed to Copy.');
-    } else {
-      navigator.clipboard.writeTex(text);
-      message.success(i18n.t('common.copied'));
-    }
-  };
-
   const statusCode = _.get(error, 'code');
   if (JSON_ERROR_CODES.includes(statusCode)) {
     title = i18n.t('wallet.transfer send error json');
@@ -28,7 +20,7 @@ const showErrorModal = ({ error, title }) => {
         </pre>
         <p>
           <Button type="link" style={{ margin: 0, color: '#00B594' }}
-            onClick={() => clickToCopy(error.message)}><Trans>button.copy to clipboard</Trans></Button>
+            onClick={() => showCopiedMsg(error.message)}><Trans>button.copy to clipboard</Trans></Button>
         </p>
     </div>
     );

@@ -100,13 +100,16 @@ const translation = {
 		'next': 'Next',
 		'ok': 'OK',
 		'prev': 'Prev',
+    'reload': 'Reload',
 		'search': 'Search',
 		'send': 'Send',
-		'show details': 'Show Details',
+    'show details': 'Show Details',
+    'sync now': 'Sync Now',
 		'test deploy': 'Test Deploy',
 		'test invoke': 'Test Invoke'
 	},
 	'common': {
+    'back': 'Back',
 		'bytes': 'Bytes',
 		'connecting': 'Connecting',
 		'contract': 'Contract',
@@ -115,7 +118,7 @@ const translation = {
 		'load more': 'Load More',
 		'size': 'Size',
 		'syncing': 'Syncing',
-		'time': 'Time'
+    'time': 'Time',
 	},
 	'contract': {
 		'choose account': 'Choose address',

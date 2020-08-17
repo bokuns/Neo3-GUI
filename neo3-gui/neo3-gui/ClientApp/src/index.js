@@ -5,6 +5,7 @@ import './index.css';
 import './i18n';
 import * as serviceWorker from './serviceWorker';
 import { StoresProvider } from './store';
+import { ViewportProvider } from './helpers/viewPort';
 import 'mobx-react/batchingForReactDom';
 import App from './App';
 
@@ -12,7 +13,9 @@ ReactDOM.render(
   <React.StrictMode>
     <StoresProvider>
       <Router>
-        <App />
+        <ViewportProvider>
+          <App />
+        </ViewportProvider>
       </Router>
     </StoresProvider>
   </React.StrictMode>,

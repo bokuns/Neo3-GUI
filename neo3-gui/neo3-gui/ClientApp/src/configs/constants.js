@@ -14,17 +14,22 @@ const GUI_CONFIG_DEFAULT = {
 };
 
 export default {
-  GUI_URL: GUI_URL,
+  BREAKPOINT_XS: 480,
+  BREAKPOINT_MD: 768,
   DEFAULT_ERROR_CODE: 500,
   DEFAULT_ERROR_MSG: 'Something went wrong...',
   DEFAULT_HEADERS: { 'Content-Type': 'application/json' },
   GITHUB_URL: 'https://github.com/neo-ngd/Neo3-GUI/issues',
   GUI_CONFIG_DEFAULT: GUI_CONFIG_DEFAULT,
+  GUI_URL: GUI_URL,
   JSON_ERROR_CODES: [20014],
   MODAL_WIDTH_LG: 650,
   MODAL_WIDTH_MD: 600,
   MODAL_WIDTH_SM: 400,
   NEO_URL: 'https://neo.org/',
   NEO3_ADDRESS_VERSION: '35',
+  PAGE_LIMIT: 50,
+  PREFIX_CHAR_COUNT: 8,
   REQ_URL: REQ_URL,
+  SUFFIX_CHAR_COUNT: 8,
 };

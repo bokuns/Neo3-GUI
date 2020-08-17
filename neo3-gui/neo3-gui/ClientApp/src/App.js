@@ -17,7 +17,6 @@ import { storesContext } from './store';
 const { Content } = Layout;
 
 const App = () => {
-  // const store = React.useContext(storesContext);
   const location = useLocation();
   const store = useContext(storesContext);
 
