@@ -6,6 +6,10 @@ const REQ_URL_DEV = `http://localhost:8081`;
 const REQ_URL_PROD = `http://localhost:8081`;
 const REQ_URL = process.env.NODE_ENV === 'development' ? REQ_URL_DEV : REQ_URL_PROD;
 
+const WS_URL_DEV = `ws://127.0.0.1:8081`;
+const WS_URL_PROD = `ws://127.0.0.1:8081`;
+const WS_URL = process.env.NODE_ENV === 'development' ? WS_URL_DEV : WS_URL_PROD;
+
 const GUI_CONFIG_DEFAULT = {
   Port: 8081,
   RPCURL: GUI_URL,
@@ -16,6 +20,7 @@ const GUI_CONFIG_DEFAULT = {
 export default {
   BREAKPOINT_XS: 480,
   BREAKPOINT_MD: 768,
+  BREAKPOINT_LG: 992,
   DEFAULT_ERROR_CODE: 500,
   DEFAULT_ERROR_MSG: 'Something went wrong...',
   DEFAULT_HEADERS: { 'Content-Type': 'application/json' },
@@ -32,4 +37,6 @@ export default {
   PREFIX_CHAR_COUNT: 8,
   REQ_URL: REQ_URL,
   SUFFIX_CHAR_COUNT: 8,
+  THEME_COLOR: '#00AF92',
+  WS_URL: WS_URL
 };

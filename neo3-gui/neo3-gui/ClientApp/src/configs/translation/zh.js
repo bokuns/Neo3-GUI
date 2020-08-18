@@ -118,7 +118,8 @@ const translation = {
 		'load more': '加载更多',
 		'size': '大小',
 		'syncing': '区块同步中',
-    'time': '时间'
+    'time': '时间',
+    'right click to copy hash': '右键点击复制Hash'
 	},
 	'contract': {
 		'choose account': '选择地址',

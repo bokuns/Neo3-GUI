@@ -8,37 +8,68 @@ import { getBlocks } from '../../helpers/requests/block';
 import shrinkText from '../../helpers/shrinkText';
 import { showErrorModal } from '../../components/Modals';
 import constants from '../../configs/constants';
-import { Spin, Typography, Row, Col, List, PageHeader, Button } from 'antd';
+import { Spin, Row, Col, List, PageHeader, Button, Table, Tooltip } from 'antd';
 import './index.css';
 
-const { BREAKPOINT_MD } = constants;
+const { BREAKPOINT_LG, THEME_COLOR } = constants;
 
 const BlockList = () => {
   const [ isLoading, setIsLoading ] = useState(false);
   const [ blocks, setBlocks ] = useState([]);
+  const [ tableData, setTableData ] = useState([]);
   const [ lastBlock, setLastBlock ] = useState(-1);
   const [ searchVisible, setSearchVisible ] = useState(false);
 
   const { width } = useViewPort();
-  const { history } = useHistory();
+  const history = useHistory();
   const { t } = useTranslation();
+
+  const generateTableData = (data) => {
+    return data.map(item => {
+      return {
+        blockInfo: {
+          blockHeight: item.blockHeight,
+          blockHash: item.blockHash
+        },
+        blockTime: item.blockTime,
+        transactionCount: item.transactionCount,
+        key: item.blockHeight
+      }
+    });
+  };
 
   const getBlocksData = (lastBlock) => {
     setIsLoading(true);
     return getBlocks({ height: lastBlock }).then(data => {
       if (!Array.isArray(data) || data.length === 0) return;
-      if (!isNaN(lastBlock)) {
-        setBlocks([
-          ...blocks,
-          ...data
-        ]);
-      } else {
+
+      if (isNaN(lastBlock)) {
+        if (blocks.length > 0) {
+          const latest = blocks[0];
+          const index = data.findIndex(item => item.blockHeight === latest.blockHeight);
+          if (index > 0) {
+            data = data.slice(0, index);
+          }
+        }
         setBlocks([
           ...data,
           ...blocks
         ]);
+        setTableData([
+          ...generateTableData(data),
+          ...tableData
+        ]);
+      } else {
+        setBlocks([
+          ...blocks,
+          ...data
+        ]);
+        setTableData([
+          ...tableData,
+          ...generateTableData(data)
+        ]);
+        setLastBlock(_.get(data[data.length - 1], 'blockHeight') - 1);
       }
-      setLastBlock(_.get(data[data.length - 1], 'blockHeight') - 1);
     }).catch(err => {
       showErrorModal(err);
     }).finally(() => {
@@ -50,71 +81,76 @@ const BlockList = () => {
     getBlocksData(lastBlock);
   };
 
-  const loadMore = blocks.length > 0 ? (
-    <div className="text-c mb3">
+  const LoadMore = blocks.length > 0 ? (
+    <div className="text-c mb3" style={{ marginTop: '6px' }}>
       <Button type="primary" onClick={() => handleLoadMore()} disabled={isLoading}>{t("common.load more")}</Button>
     </div>
   ) : (
-    <div className="text-c mb3">
+    <div className="text-c mb3" style={{ marginTop: '6px' }}>
       <Button type="primary" onClick={() => getBlocksData(lastBlock)} disabled={isLoading}>{t("button.reload")}</Button>
     </div>
   );
 
   const handleItemClick = (value) => {
-    console.log(value);
+    history.push(`/chain/blocks/${value.blockHeight}`);
   }
 
   useEffect(() => {
     getBlocksData(lastBlock);
   }, []);
 
+  const columns = [
+    {
+      title: t('blockchain.block info'),
+      dataIndex: 'blockInfo',
+      fixed: 'left',
+      align: 'left',
+      // eslint-disable-next-line react/display-name
+      render: (value, row, index) => (
+        <div className="tableItem-wrapper" key={`${row}-${index}`}>
+          <div className="ant-list-item-meta-title" style={{ cursor: 'pointer' }}
+            onClick={() => handleItemClick(value)
+          }>
+            <h4 style={{ marginBottom: 6 }}>{ value.blockHeight }</h4>
+          </div>
+          <Tooltip placement="rightBottom" title={t('common.right click to copy hash')} color={THEME_COLOR} >
+            <div className="ant-list-item-meta-description"
+              onContextMenu={() => showCopiedMsg(value.blockHash)}
+            >
+              { width > BREAKPOINT_LG ? value.blockHash : shrinkText(value.blockHash) }
+            </div>
+          </Tooltip>
+        </div>
+      )
+    },
+    {
+      title: t("blockchain.transaction count"),
+      dataIndex: 'transactionCount',
+      align: 'center',
+      width: 100
+    },
+    {
+      title: t("blockchain.block time"),
+      width: 120,
+      dataIndex: 'blockTime',
+      fixed: 'right',
+      align: 'right'
+    }
+  ]
+
   return(
     <div id="BlockList">
       <Spin spinning={isLoading}>
-        <Row gutter={[30, 0]} style={{ 'minHeight': 'calc( 100vh - 120px )' }}>
-          <Col span={24} className="bg-white pv4">
-            <PageHeader title={t("blockchain.blocks")} extra={[
-              <Button size="small" type="text" onClick={() => getBlocksData()} key="1" >{t('button.sync now')}</Button>
-            ]} />
-            <List
-              header={
-                <div>
-                  <span style={{ textAlign: 'left' }}>{t("blockchain.block info")}</span>
-                  <span className="float-r ml4"><span className="trans-amount-title">{t("blockchain.transaction count")}</span></span>
-                  <span className="float-r">{t("blockchain.block time")}</span>
-                </div>
-              }
-              footer={<span></span>}
-              itemLayout="horizontal"
-              loading={isLoading}
-              loadMore={loadMore}
-              dataSource={blocks}
-              className="font-s"
-              renderItem={item => (
-                <List.Item>
-                  <List.Item.Meta
-                    title={
-                      <div onClick={() => handleItemClick(item)}
-                        style={{ textAlign: 'left', cursor: 'pointer' }}
-                      >
-                        {item.blockHeight}
-                      </div>
-                    }
-                    description={
-                      <div className="font-s" style={{ textAlign: 'left' }}
-                        onContextMenu={() => showCopiedMsg(item.blockHash)}
-                      >
-                        { width > BREAKPOINT_MD ? item.blockHash : shrinkText(item.blockHash) }
-                      </div>
-                    }
-                  />
-                  <Typography>{item.blockTime}</Typography>
-                  <Typography className="upcase ml4"><span className="wa-amount">{item.transactionCount}</span></Typography>
-                </List.Item>
-              )}
-            />
-          </Col>
-        </Row>
+        <PageHeader title={t("blockchain.blocks")} className="bg-white pv4" extra={[
+          <Button size="small" type="text" onClick={() => getBlocksData()} key="1" >{t('button.sync now')}</Button>
+        ]} />
+        <Table columns={columns}
+          dataSource={tableData}
+          scroll={{ x: '100%' }}
+          size="small"
+          pagination={false}
+          footer={() => LoadMore}
+        />
       </Spin>
     </div>
   );

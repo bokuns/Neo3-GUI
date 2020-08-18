@@ -119,6 +119,7 @@ const translation = {
 		'size': 'Size',
 		'syncing': 'Syncing',
     'time': 'Time',
+    'right click to copy hash': 'Right-click to copy Hash'
 	},
 	'contract': {
 		'choose account': 'Choose address',

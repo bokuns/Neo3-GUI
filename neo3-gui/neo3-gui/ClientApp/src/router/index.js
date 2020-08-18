@@ -6,7 +6,7 @@ import walletLayouts from '../layouts/wallet';
 import contractLayouts from '../layouts/contract';
 import advancedLayouts from '../layouts/advanced';
 
-const { Blocks } = chainLayouts;
+const { Blocks, Block } = chainLayouts;
 const { WalletList } = walletLayouts;
 const { Search } = contractLayouts;
 const { Tools } = advancedLayouts;
@@ -22,6 +22,11 @@ const routes = [
     exact: true,
     sider: <Sider />,
     layout: <Blocks />
+  },
+  {
+    path: '/chain/blocks/:height',
+    sider: <Sider />,
+    layout: <Block />
   },
   {
     path: '/wallet/walletList',

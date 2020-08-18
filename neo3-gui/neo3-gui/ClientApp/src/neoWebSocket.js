@@ -1,4 +1,7 @@
 import _ from 'lodash';
+import constants from './configs/constants';
+
+const { WS_URL } = constants;
 
 class NeoWebSocket {
   constructor() {
@@ -14,13 +17,15 @@ class NeoWebSocket {
   /**
    * Only need call once over the entire app life
    */
-  initWebSocket = function() {
+  initWebSocket() {
+    if (this.ws) return;
     this.ws = this.createWebSocket();
-  };
+  }
 
   createWebSocket() {
+    if (this.ws) return;
     this.log("creating new webscoket");
-    this.ws = new WebSocket('ws://127.0.0.1:8081');
+    this.ws = new WebSocket(WS_URL);
     const _this = this;
 
     this.ws.onopen = () => {

@@ -23,6 +23,7 @@ const createWindow = () => {
       plugins: true,
       nodeIntegration: false,
       webSecurity: false,
+      enableRemoteModule: true,
       preload: path.join(__dirname, 'preload.js')
     }
   });

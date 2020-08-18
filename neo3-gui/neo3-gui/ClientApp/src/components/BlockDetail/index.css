@@ -1,0 +1,13 @@
+.blockdetail-container {
+  width: 100%;
+  text-align: left;
+}
+
+.content-container .ant-row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.blockdetail-wrapper {
+  padding: 12px;
+}

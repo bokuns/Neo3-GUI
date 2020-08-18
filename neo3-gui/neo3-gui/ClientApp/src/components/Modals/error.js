@@ -9,7 +9,7 @@ import i18n from '../../i18n';
 
 const { JSON_ERROR_CODES, MODAL_WIDTH_LG, MODAL_WIDTH_MD } = constants;
 
-const showErrorModal = ({ error, title }) => {
+const showErrorModal = (error, title) => {
   const statusCode = _.get(error, 'code');
   if (JSON_ERROR_CODES.includes(statusCode)) {
     title = i18n.t('wallet.transfer send error json');

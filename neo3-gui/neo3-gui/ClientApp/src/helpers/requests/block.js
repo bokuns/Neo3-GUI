@@ -36,3 +36,31 @@ export const getBlocks = ({ limit, height }) => {
   });
 };
 
+export const getBlockByHeight = (height) => {
+  if (isNaN(height) || height < 0) throw generateError();
+
+  const url = `${REQ_URL}`;
+  const data = {
+    id: new Date().getTime().toString(),
+    method: 'GetBlock',
+    params: {
+      index: height
+    }
+  };
+  const options = {
+    headers: DEFAULT_HEADERS
+  };
+
+  return axios.post(url, data, options).then(res => {
+    const data = _.get(res, 'data', null);
+    if (!data) throw generateError();
+
+    const { msgType } = data;
+    if (msgType === -1) {
+      throw generateError(data);
+    }
+
+    return _.get(data, 'result', null);
+  });
+};
+
