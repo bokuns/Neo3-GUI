@@ -1,23 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import _ from 'lodash';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams, Link } from 'react-router-dom';
-import { useViewPort } from '../../helpers/viewPort';
-import showCopiedMsg from '../../components/Messages/showCopied';
-import shrinkText from '../../helpers/shrinkText';
-import { showErrorModal } from '../../components/Modals';
+import { useHistory, } from 'react-router-dom';
+import { storesContext } from '../../store';
+import { Shrinkable } from '../../helpers/shrinkText';
 import constants from '../../configs/constants';
-import { Row, Col, PageHeader, Tooltip, Content, Space } from 'antd';
+import { Row, Col, PageHeader, Space } from 'antd';
 import './index.css';
 
-const { BREAKPOINT_LG, THEME_COLOR } = constants;
+const { BREAKPOINT_LG } = constants;
 
-const BlockDetail = (props) => {
-  const { width } = useViewPort();
+const BlockDetail = ({ blockDetail }) => {
+  const store = useContext(storesContext);
   const history = useHistory();
   const { t } = useTranslation();
-  const { blockDetail, changeHeight } = props;
-  console.log(props, blockDetail);
+
+  const alignCol = {
+    xs: 24,
+    sm: 24,
+    md: 12,
+    lg: 12,
+    xl: 12,
+  }
 
   useEffect(() => {
 
@@ -31,15 +35,97 @@ const BlockDetail = (props) => {
           <Col xs={24} sm={24} md={24} lg={24} xl={24}>
             <div className="hash-title mt5 mb4">
               <Space align="baseline" size="middle">
-                <span>Hash: </span><span>{ width > BREAKPOINT_LG ? blockDetail.blockHash : shrinkText(blockDetail.blockHash, 12, 12) }</span>
+                <span>Hash: </span>
+                <Shrinkable text={blockDetail.blockHash} shrinkPoint={BREAKPOINT_LG} prefixCount={12} suffixCount={12} />
               </Space>
             </div>
           </Col>
-          <Col xs={20} sm={16} md={12} lg={8} xl={4}>
-            Col
+        </Row>
+        <Row align="middle">
+          <Col xs={alignCol.xs} sm={alignCol.sm} md={alignCol.md} lg={alignCol.lg} xl={alignCol.xl}>
+            <Space align="baseline" size="small">
+              <span className="hint">{t("blockchain.height")}:</span>
+              <span>{blockDetail.blockHeight}</span>
+            </Space>
           </Col>
-          <Col xs={2} sm={4} md={6} lg={8} xl={10}>
-            Col
+          <Col xs={alignCol.xs} sm={alignCol.sm} md={alignCol.md} lg={alignCol.lg} xl={alignCol.xl}>
+            <Space align="baseline" size="small">
+              <span className="hint">{t("common.size")}：</span>
+              <span>{blockDetail.size} {t("common.bytes")}</span>
+            </Space>
+          </Col>
+        </Row>
+        <Row align="middle">
+          <Col xs={alignCol.xs} sm={alignCol.sm} md={alignCol.md} lg={alignCol.lg} xl={alignCol.xl}>
+            <Space align="baseline" size="small">
+              <span className="hint">{t("blockchain.timestamp")}：</span>
+              <span>{blockDetail.blockTime}</span>
+            </Space>
+          </Col>
+          <Col xs={alignCol.xs} sm={alignCol.sm} md={alignCol.md} lg={alignCol.lg} xl={alignCol.xl}>
+            <Space align="baseline" size="small">
+              <span className="hint">{t("blockchain.nounce")}：</span>
+              <span>{_.get(blockDetail, 'consensusData.nonce')}</span>
+            </Space>
+          </Col>
+        </Row>
+        <Row align="middle">
+          <Col xs={alignCol.xs} sm={alignCol.sm} md={alignCol.md} lg={alignCol.lg} xl={alignCol.xl}>
+            <Space align="baseline" size="small">
+              <span className="hint">{t("blockchain.network fee")}：</span>
+              <span>{blockDetail.networkFee ? blockDetail.networkFee : '--'}</span>
+            </Space>
+          </Col>
+          <Col xs={alignCol.xs} sm={alignCol.sm} md={alignCol.md} lg={alignCol.lg} xl={alignCol.xl}>
+            <Space align="baseline" size="small">
+              <span className="hint">{t("blockchain.system fee")}：</span>
+              <span>{blockDetail.systemFee ? blockDetail.systemFee : '--'}</span>
+            </Space>
+          </Col>
+        </Row>
+        <Row align="middle">
+          <Col xs={alignCol.xs} sm={alignCol.sm} md={alignCol.md} lg={alignCol.lg} xl={alignCol.xl}>
+            <Space align="baseline" size="small">
+              <span className="hint">{t("blockchain.confirmations")}：</span>
+              <span>{blockDetail.confirmations}</span>
+            </Space>
+          </Col>
+          <Col xs={alignCol.xs} sm={alignCol.sm} md={alignCol.md} lg={alignCol.lg} xl={alignCol.xl}>
+            <Space align="baseline" size="small">
+              <span className="hint">{t("blockchain.witness")}：</span>
+              <Shrinkable text={blockDetail.nextConsensus} shrinkPoint={BREAKPOINT_LG} />
+            </Space>
+          </Col>
+        </Row>
+        <Row align="middle">
+          <Col xs={alignCol.xs} sm={alignCol.sm} md={alignCol.md} lg={alignCol.lg} xl={alignCol.xl}>
+            <Space align="baseline" size="small">
+              <span className="hint">{t("blockchain.prev block")}：</span>
+              { blockDetail.blockHeight !== 0 ? (
+                <div className="cursor-pointer"
+                  onClick={() => history.replace(`/chain/blocks/${blockDetail.blockHeight - 1}`)}
+                >
+                  {blockDetail.blockHeight - 1}
+                </div>
+                ) : (
+                  <div> -- </div>
+                )
+              }
+            </Space>
+          </Col>
+          <Col xs={alignCol.xs} sm={alignCol.sm} md={alignCol.md} lg={alignCol.lg} xl={alignCol.xl}>
+            <Space align="baseline" size="small">
+              <span className="hint">{t("blockchain.next block")}：</span>
+              { _.get(store, 'blockSync.syncHeight', -1) > blockDetail.blockHeight ? (
+                <div className="cursor-pointer"
+                  onClick={() => history.replace(`/chain/blocks/${blockDetail.blockHeight + 1}`)}
+                >
+                  {blockDetail.blockHeight + 1}
+                </div>
+              ) : (
+                <div> -- </div>
+              )}
+            </Space>
           </Col>
         </Row>
       </div>

@@ -3,12 +3,11 @@ import _ from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useViewPort } from '../../helpers/viewPort';
-import showCopiedMsg from '../../components/Messages/showCopied';
 import { getBlocks } from '../../helpers/requests/block';
-import shrinkText from '../../helpers/shrinkText';
+import { Shrinkable } from '../../helpers/shrinkText';
 import { showErrorModal } from '../../components/Modals';
 import constants from '../../configs/constants';
-import { Spin, Row, Col, List, PageHeader, Button, Table, Tooltip } from 'antd';
+import { Spin, PageHeader, Button, Table, Tooltip } from 'antd';
 import './index.css';
 
 const { BREAKPOINT_LG, THEME_COLOR } = constants;
@@ -114,10 +113,8 @@ const BlockList = () => {
             <h4 style={{ marginBottom: 6 }}>{ value.blockHeight }</h4>
           </div>
           <Tooltip placement="rightBottom" title={t('common.right click to copy hash')} color={THEME_COLOR} >
-            <div className="ant-list-item-meta-description"
-              onContextMenu={() => showCopiedMsg(value.blockHash)}
-            >
-              { width > BREAKPOINT_LG ? value.blockHash : shrinkText(value.blockHash) }
+            <div className="ant-list-item-meta-description">
+              <Shrinkable text={value.blockHash} shrinkPoint={BREAKPOINT_LG} />
             </div>
           </Tooltip>
         </div>
@@ -140,14 +137,14 @@ const BlockList = () => {
 
   return(
     <div id="BlockList">
+      <PageHeader title={t("blockchain.blocks")} className="bg-white pv4" extra={[
+        <Button size="small" type="text" onClick={() => getBlocksData()} key="1" >{t('button.sync now')}</Button>
+      ]} />
       <Spin spinning={isLoading}>
-        <PageHeader title={t("blockchain.blocks")} className="bg-white pv4" extra={[
-          <Button size="small" type="text" onClick={() => getBlocksData()} key="1" >{t('button.sync now')}</Button>
-        ]} />
         <Table columns={columns}
           dataSource={tableData}
-          scroll={{ x: '100%' }}
-          size="small"
+          scroll={{ x: 'max-content' }}
+          size="default"
           pagination={false}
           footer={() => LoadMore}
         />
