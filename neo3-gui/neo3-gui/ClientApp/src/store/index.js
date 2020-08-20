@@ -25,5 +25,5 @@ export const StoresProvider = ({ children }) => {
 
   return (
     <storesContext.Provider value={stores}>{children}</storesContext.Provider>
-  )
+  );
 };

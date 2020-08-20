@@ -38,5 +38,6 @@ export default {
   REQ_URL: REQ_URL,
   SUFFIX_CHAR_COUNT: 8,
   THEME_COLOR: '#00AF92',
+  TRANS_LiMIT: 100,
   WS_URL: WS_URL
 };

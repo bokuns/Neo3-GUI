@@ -1,72 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import _ from 'lodash';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
-import { useViewPort } from '../../helpers/viewPort';
-import { getTransactions } from '../../helpers/requests/transaction';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Shrinkable } from '../../helpers/shrinkText';
-import { showErrorModal } from '../../components/Modals';
 import constants from '../../configs/constants';
-import { Spin, PageHeader, Button, Table, Tooltip } from 'antd';
+import { Button, Table } from 'antd';
 import './index.css';
 
-const { BREAKPOINT_LG, THEME_COLOR } = constants;
+const { BREAKPOINT_LG } = constants;
 
-const TransList = ({ transList }) => {
-  console.log('transList:', transList);
-  const [ isLoading, setIsLoading ] = useState(false);
-  const [ cumTransList, setCumTransList ] = useState([]);
-  const [ tableData, setTableData ] = useState([]);
-  const [ lastTrans, setLastTrans ] = useState(-1);
-
-  const { width } = useViewPort();
+const TransList = ({ data, handleLoadMore, isLoading }) => {
   const history = useHistory();
+  const location = useLocation();
   const { t } = useTranslation();
 
-  const getTransData = (page) => {
-    if (isNaN(page) || page < 1) page = 1;
-    return getTransactions(page).then(data => {
-      setCumTransList([
-        ...cumTransList,
-        ...data
-      ]);
-    });
-  };
-
-  const handleLoadMore = () => {
-
-  };
-
-  const LoadMore = transList.length > 0 ? (
+  const LoadMore = data.length > 0 ? (
     <div className="text-c mb3" style={{ marginTop: '6px' }}>
       <Button type="primary" onClick={() => handleLoadMore()} disabled={isLoading}>{t("common.load more")}</Button>
     </div>
   ) : (
     <div className="text-c mb3" style={{ marginTop: '6px' }}>
-      <Button type="primary" onClick={() => getTransData(lastTrans)} disabled={isLoading}>{t("button.reload")}</Button>
+      <Button type="primary" onClick={() => handleLoadMore()} disabled={isLoading}>{t("button.reload")}</Button>
     </div>
   );
 
   const handleItemClick = (value) => {
-    console.log(value);
+    let currPath = _.get(location, 'pathname');
+    if (_.endsWith(currPath, '/')) currPath = _.trimEnd(currPath, '/');
+    history.push(`${currPath}/${value}`);
   };
-
-  useEffect(() => {
-    setCumTransList(transList);
-  }, []);
 
   const columns = [
     {
-      title: t('blockchain.transaction.status'),
-      dataIndex: 'status',
-      fixed: 'left',
-      align: 'left',
-      width: 100,
-    },
-    {
       title: t('blockchain.transaction info'),
       dataIndex: 'txId',
-      align: 'left'
+      align: 'left',
+      // eslint-disable-next-line react/display-name
+      render: (value) => (
+        <div className="ant-list-item-meta-description cursor-pointer" onClick={() => handleItemClick(value)} >
+          <Shrinkable text={value} shrinkPoint={BREAKPOINT_LG} copyable pointer />
+        </div>
+      )
     },
     {
       title: t("blockchain.block time"),
@@ -78,17 +52,13 @@ const TransList = ({ transList }) => {
   ]
 
   return(
-    <div id="TransList" className="translist-container">
-      <PageHeader title={t("blockchain.transaction info")} className="bg-white pv4" />
-      <Spin spinning={isLoading}>
-        <Table columns={columns}
-          dataSource={tableData}
-          scroll={{ x: 'max-content' }}
-          size="default"
-          pagination={false}
-          footer={() => LoadMore}
-        />
-      </Spin>
+    <div id="TransList" className="translist-container bg-white">
+      <Table columns={columns} rowKey="txId"
+        dataSource={data}
+        scroll={{ x: 'max-content' }}
+        pagination={false}
+        footer={() => LoadMore}
+      />
     </div>
   );
 };

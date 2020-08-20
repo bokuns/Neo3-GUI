@@ -5,8 +5,9 @@ import chainLayouts from '../layouts/chain';
 import walletLayouts from '../layouts/wallet';
 import contractLayouts from '../layouts/contract';
 import advancedLayouts from '../layouts/advanced';
+import TransDetail from '../components/TransDetail';
 
-const { Blocks, Block } = chainLayouts;
+const { Blocks, Block, ChainTransactions } = chainLayouts;
 const { WalletList } = walletLayouts;
 const { Search } = contractLayouts;
 const { Tools } = advancedLayouts;
@@ -18,10 +19,9 @@ const routes = [
     layout: <Home />
   },
   {
-    path: '/chain/blocks',
-    exact: true,
+    path: '/chain/blocks/:height/:txId',
     sider: <Sider />,
-    layout: <Blocks />
+    layout: <TransDetail />
   },
   {
     path: '/chain/blocks/:height',
@@ -29,10 +29,45 @@ const routes = [
     layout: <Block />
   },
   {
-    path: '/wallet/walletList',
+    path: '/chain/blocks',
+    exact: true,
+    sider: <Sider />,
+    layout: <Blocks />
+  },
+  {
+    path: '/chain/transactions/:txId',
+    sider: <Sider />,
+    layout: <TransDetail />
+  },
+  {
+    path: '/chain/transactions',
+    exact: true,
+    sider: <Sider />,
+    layout: <ChainTransactions />
+  },
+  {
+    path: '/chain/assets',
+    exact: true,
+    sider: <Sider />,
+    layout: <></>
+  },
+  {
+    path: '/wallet/accounts',
     exact: true,
     sider: <Sider />,
     layout: <WalletList />
+  },
+  {
+    path: '/wallet/transactions',
+    exact: true,
+    sider: <Sider />,
+    layout: <></>
+  },
+  {
+    path: '/wallet/transfer',
+    exact: true,
+    sider: <Sider />,
+    layout: <></>
   },
   {
     path: '/contract/search',
@@ -41,10 +76,40 @@ const routes = [
     layout: <Search />
   },
   {
+    path: '/contract/deploy',
+    exact: true,
+    sider: <Sider />,
+    layout: <></>
+  },
+  {
+    path: '/contract/invoke',
+    exact: true,
+    sider: <Sider />,
+    layout: <></>
+  },
+  {
     path: '/advanced/tools',
     exact: true,
     sider: <Sider />,
     layout: <Tools />
+  },
+  {
+    path: '/advanced/candidate',
+    exact: true,
+    sider: <Sider />,
+    layout: <></>
+  },
+  {
+    path: '/advanced/vote',
+    exact: true,
+    sider: <Sider />,
+    layout: <></>
+  },
+  {
+    path: '/advanced/sign',
+    exact: true,
+    sider: <Sider />,
+    layout: <></>
   }
 ];
 

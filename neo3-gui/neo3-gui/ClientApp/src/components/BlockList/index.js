@@ -1,30 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import _ from 'lodash';
-import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useViewPort } from '../../helpers/viewPort';
-import { getBlocks } from '../../helpers/requests/block';
+import { useTranslation } from 'react-i18next';
 import { Shrinkable } from '../../helpers/shrinkText';
-import { showErrorModal } from '../../components/Modals';
 import constants from '../../configs/constants';
-import { Spin, PageHeader, Button, Table, Tooltip } from 'antd';
+import { Button, Table, Tooltip } from 'antd';
 import './index.css';
 
 const { BREAKPOINT_LG, THEME_COLOR } = constants;
 
-const BlockList = () => {
-  const [ isLoading, setIsLoading ] = useState(false);
-  const [ blocks, setBlocks ] = useState([]);
-  const [ tableData, setTableData ] = useState([]);
-  const [ lastBlock, setLastBlock ] = useState(-1);
-  const [ searchVisible, setSearchVisible ] = useState(false);
-
-  const { width } = useViewPort();
-  const history = useHistory();
+const BlockList = ({ data, handleLoadMore, isLoading }) => {
   const { t } = useTranslation();
+  const history = useHistory();
 
-  const generateTableData = (data) => {
-    return data.map(item => {
+  const generateTableData = (list) => {
+    return list.map(item => {
       return {
         blockInfo: {
           blockHeight: item.blockHeight,
@@ -37,66 +27,19 @@ const BlockList = () => {
     });
   };
 
-  const getBlocksData = (lastBlock) => {
-    setIsLoading(true);
-    return getBlocks({ height: lastBlock }).then(data => {
-      if (!Array.isArray(data) || data.length === 0) return;
-
-      if (isNaN(lastBlock)) {
-        if (blocks.length > 0) {
-          const latest = blocks[0];
-          const index = data.findIndex(item => item.blockHeight === latest.blockHeight);
-          if (index > 0) {
-            data = data.slice(0, index);
-          }
-        }
-        setBlocks([
-          ...data,
-          ...blocks
-        ]);
-        setTableData([
-          ...generateTableData(data),
-          ...tableData
-        ]);
-      } else {
-        setBlocks([
-          ...blocks,
-          ...data
-        ]);
-        setTableData([
-          ...tableData,
-          ...generateTableData(data)
-        ]);
-        setLastBlock(_.get(data[data.length - 1], 'blockHeight') - 1);
-      }
-    }).catch(err => {
-      showErrorModal(err);
-    }).finally(() => {
-      setIsLoading(false);
-    });
-  };
-
-  const handleLoadMore = () => {
-    getBlocksData(lastBlock);
-  };
-
-  const LoadMore = blocks.length > 0 ? (
-    <div className="text-c mb3" style={{ marginTop: '6px' }}>
-      <Button type="primary" onClick={() => handleLoadMore()} disabled={isLoading}>{t("common.load more")}</Button>
-    </div>
-  ) : (
-    <div className="text-c mb3" style={{ marginTop: '6px' }}>
-      <Button type="primary" onClick={() => getBlocksData(lastBlock)} disabled={isLoading}>{t("button.reload")}</Button>
-    </div>
-  );
-
   const handleItemClick = (value) => {
     history.push(`/chain/blocks/${value.blockHeight}`);
   }
 
-  useEffect(() => {
-    getBlocksData(lastBlock);
-  }, []);
+  const LoadMore = data.length > 0 ? (
+    <div className="text-c mb3" style={{ marginTop: '6px' }}>
+      <Button type="primary" onClick={() => handleLoadMore(lastHeight)} disabled={isLoading}>{t("common.load more")}</Button>
+    </div>
+  ) : (
+    <div className="text-c mb3" style={{ marginTop: '6px' }}>
+      <Button type="primary" onClick={() => handleLoadMore()} disabled={isLoading}>{t("button.reload")}</Button>
+    </div>
+  );
 
   const columns = [
     {
@@ -105,18 +48,16 @@ const BlockList = () => {
       fixed: 'left',
       align: 'left',
       // eslint-disable-next-line react/display-name
-      render: (value, row, index) => (
-        <div className="tableItem-wrapper" key={`${row}-${index}`}>
+      render: (value) => (
+        <div className="tableItem-wrapper">
           <div className="ant-list-item-meta-title" style={{ cursor: 'pointer' }}
             onClick={() => handleItemClick(value)
           }>
             <h4 style={{ marginBottom: 6 }}>{ value.blockHeight }</h4>
           </div>
-          <Tooltip placement="rightBottom" title={t('common.right click to copy hash')} color={THEME_COLOR} >
-            <div className="ant-list-item-meta-description">
-              <Shrinkable text={value.blockHash} shrinkPoint={BREAKPOINT_LG} />
-            </div>
-          </Tooltip>
+          <div className="ant-list-item-meta-description">
+            <Shrinkable text={value.blockHash} shrinkPoint={BREAKPOINT_LG} />
+          </div>
         </div>
       )
     },
@@ -133,22 +74,22 @@ const BlockList = () => {
       fixed: 'right',
       align: 'right'
     }
-  ]
+  ];
+
+  const tableData = generateTableData(data);
+  let lastHeight = -1;
+  if (data.length > 0) {
+    lastHeight = (_.get(data[data.length - 1], 'blockHeight') - 1);
+  }
 
   return(
     <div id="BlockList">
-      <PageHeader title={t("blockchain.blocks")} className="bg-white pv4" extra={[
-        <Button size="small" type="text" onClick={() => getBlocksData()} key="1" >{t('button.sync now')}</Button>
-      ]} />
-      <Spin spinning={isLoading}>
-        <Table columns={columns}
-          dataSource={tableData}
-          scroll={{ x: 'max-content' }}
-          size="default"
-          pagination={false}
-          footer={() => LoadMore}
-        />
-      </Spin>
+      <Table columns={columns}
+        dataSource={tableData}
+        scroll={{ x: 'max-content' }}
+        pagination={false}
+        footer={() => LoadMore}
+      />
     </div>
   );
 };

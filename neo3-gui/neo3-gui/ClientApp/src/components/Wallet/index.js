@@ -28,12 +28,12 @@ const Wallet = (pros) => {
     return () =>{
       this.setState({showElem: false})
       switch(ele){
-        case 0:this.setState({children: <Walletopen />});break;
-        case 1:this.setState({children: <Walletcreate />});break;
-        case 2:this.setState({children: <Walletprivate />});break;
-        case 3:this.setState({children: <Walletencrypted />});break;
-        case 4:this.setState({children: <Walletopen />});break;
-        default:this.setState({showElem: true});break;
+        case 0: this.setState({children: <Walletopen />});break;
+        case 1: this.setState({children: <Walletcreate />});break;
+        case 2: this.setState({children: <Walletprivate />});break;
+        case 3: this.setState({children: <Walletencrypted />});break;
+        case 4: this.setState({children: <Walletopen />});break;
+        default: this.setState({showElem: true});break;
       }
     }
   }

@@ -24,6 +24,7 @@ const MySider = () => {
     {
       title: t('sideBar.home'),
       key: '0',
+      path: '/',
       icon: <HomeOutlined />
     },
     {
@@ -33,15 +34,18 @@ const MySider = () => {
       subMenus: [
         {
           title: t('sideBar.blocks'),
-          key: '1_0'
+          key: '1_0',
+          path: '/chain/blocks'
         },
         {
           title: t('sideBar.transactions'),
-          key: '1_1'
+          key: '1_1',
+          path: '/chain/transactions'
         },
         {
           title: t('sideBar.assets'),
-          key: '1_2'
+          key: '1_2',
+          path: '/chain/assets'
         }
       ]
     },
@@ -52,15 +56,18 @@ const MySider = () => {
       subMenus: [
         {
           title: t('sideBar.accounts'),
-          key: '2_0'
+          key: '2_0',
+          path: '/wallet/accounts'
         },
         {
           title: t('sideBar.transaction Records'),
-          key: '2_1'
+          key: '2_1',
+          path: '/wallet/transactions'
         },
         {
           title: t('sideBar.transfer'),
-          key: '2_2'
+          key: '2_2',
+          path: '/wallet/transfer'
         }
       ]
     },
@@ -71,15 +78,18 @@ const MySider = () => {
       subMenus: [
         {
           title: t('sideBar.search contract'),
-          key: '3_0'
+          key: '3_0',
+          path: '/contract/search'
         },
         {
           title: t('sideBar.deploy contract'),
-          key: '3_1'
+          key: '3_1',
+          path: '/contract/deploy'
         },
         {
           title: t('sideBar.invoke contract'),
-          key: '3_2'
+          key: '3_2',
+          path: '/contract/invoke'
         }
       ],
     },
@@ -90,19 +100,23 @@ const MySider = () => {
       subMenus: [
         {
           title: t('advanced.tools'),
-          key: '4_0'
+          key: '4_0',
+          path: '/advanced/tools'
         },
         {
           title: t('advanced.candidate'),
-          key: '4_1'
+          key: '4_1',
+          path: '/advanced/candidate'
         },
         {
           title: t('advanced.vote'),
-          key: '4_2'
+          key: '4_2',
+          path: '/advanced/vote'
         },
         {
           title: t('advanced.signature'),
-          key: '4_3'
+          key: '4_3',
+          path: '/advanced/sign'
         }
       ]
     }
@@ -119,7 +133,15 @@ const MySider = () => {
       return menuItemsList[4];
     }
     return;
-  }
+  };
+
+  const handleHomeClick = () => {
+    history.replace('/');
+  };
+
+  const handleSubMenuClick = (path) => {
+    history.push(path);
+  };
 
   const generateMenuItem = (menuItem) => {
     if (!menuItem) return (<div />);
@@ -128,15 +150,11 @@ const MySider = () => {
     return (
       <SubMenu key={key} icon={icon} title={title}>
         { subMenus.map(item =>
-          (<Menu.Item key={item.key}>{ item.title }</Menu.Item>))
+          (<Menu.Item key={item.key} onClick={() => handleSubMenuClick(item.path)}>{ item.title }</Menu.Item>))
         }
       </SubMenu>
     );
   };
-
-  const handleHomeClick = () => {
-    history.replace('/');
-  }
 
   const generateMenu = () => {
     const listMenu = generateItemList();

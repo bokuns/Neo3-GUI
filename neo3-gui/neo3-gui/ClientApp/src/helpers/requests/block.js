@@ -8,7 +8,7 @@ const { REQ_URL, DEFAULT_HEADERS, PAGE_LIMIT } = constants;
 export const getBlocks = ({ limit, height }) => {
   const url = `${REQ_URL}`;
   const params = {
-    limit: isNaN(limit) ? PAGE_LIMIT : limit,
+    limit: isNaN(limit) || limit < 0 ? PAGE_LIMIT : limit,
   };
   if (!isNaN(height) && height >= 0) {
     params.height = height;

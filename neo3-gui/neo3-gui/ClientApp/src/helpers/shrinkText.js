@@ -10,10 +10,10 @@ export const shrinkText = (text, prefixCount = PREFIX_CHAR_COUNT, suffixCount = 
   if (!text) return;
   const len = text.length;
   if (len < (prefixCount + suffixCount)) return text;
-  return `${text.substring(0, prefixCount + 1)}...${text.substring(len - suffixCount - 1)}`;
+  return `${text.substring(0, prefixCount)}...${text.substring(len - suffixCount)}`;
 }
 
-export const Shrinkable = ({ text, shrinkPoint = BREAKPOINT_MD, prefixCount, suffixCount, copyable }) => {
+export const Shrinkable = ({ text, shrinkPoint = BREAKPOINT_MD, prefixCount, suffixCount, copyable, pointer }) => {
   if (isNaN(shrinkPoint)) shrinkPoint = +shrinkPoint;
   const { width } = useViewPort();
   const { t } = useTranslation();
@@ -22,7 +22,7 @@ export const Shrinkable = ({ text, shrinkPoint = BREAKPOINT_MD, prefixCount, suf
     <span>{ width > shrinkPoint ? text : shrinkText(text, prefixCount, suffixCount) }</span>
   ) : (
     <Tooltip placement="rightBottom" title={t('common.right click to copy hash')} color={THEME_COLOR} >
-      <span onContextMenu={() => showCopied(text)} style={{ cursor: 'default' }}>
+      <span onContextMenu={() => showCopied(text)} style={{ cursor: pointer ? 'pointer' : 'default' }}>
         { width > shrinkPoint ? text : shrinkText(text, prefixCount, suffixCount) }
       </span>
     </Tooltip>
